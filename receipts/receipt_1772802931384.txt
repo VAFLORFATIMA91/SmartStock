@@ -1,0 +1,15 @@
+======= MY STORE =======
+123 Main Street
+Tel: 09123456789
+------------------------
+kojic       1x  55.00
+safeguard   1x  20.00
+------------------------
+TOTAL: 75.00
+PAY: CREDIT CARD
+Card Type: VISA
+Last 4: 1234
+Approval: 567890
+Payment Type: Credit Card
+========================
+ THANK YOU! COME AGAIN!

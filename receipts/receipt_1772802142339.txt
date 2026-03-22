@@ -1,0 +1,16 @@
+       MY STORE NAME
+    123 Main Street
+       Tel: 09123456789
+----------------------------------------
+QTY  ITEM               PRICE    TOTAL
+----------------------------------------
+1    safeguard        20.00   20.00
+5    shampoo          10.00   50.00
+----------------------------------------
+TOTAL:                         70.00
+PAY:                          100.00
+CHANGE:                        30.00
+Payment Type: Cash
+----------------------------------------
+       THANK YOU FOR SHOPPING!
+        PLEASE COME AGAIN!

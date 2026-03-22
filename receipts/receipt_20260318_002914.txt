@@ -1,0 +1,14 @@
+   ==== MERIDA'S STORE ====   
+   123 Main Street
+   Tel: 09123456789
+-----------------------
+Item         Qty   Total
+-----------------------
+floorwax       5  100.00
+-----------------------
+TOTAL:           100.00
+PAY:             100.00
+CHANGE:            0.00
+Payment Type: Cash
+-----------------------
+  THANK YOU! COME AGAIN  

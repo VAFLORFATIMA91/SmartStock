@@ -1,0 +1,16 @@
+       MY STORE NAME
+    123 Main Street
+       Tel: 09123456789
+----------------------------------------
+QTY  ITEM               PRICE    TOTAL
+----------------------------------------
+1    safeguard        20.00   20.00
+2    kojic            55.00  110.00
+----------------------------------------
+TOTAL:                        130.00
+PAY:                          150.00
+CHANGE:                        20.00
+Payment Type: Cash
+----------------------------------------
+       THANK YOU FOR SHOPPING!
+        PLEASE COME AGAIN!
