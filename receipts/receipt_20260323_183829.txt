@@ -1,0 +1,16 @@
+   ==== MERIDA'S STORE ====   
+   123 Main Street
+   Tel: 09123456789
+-----------------------
+Item         Qty   Total
+-----------------------
+wings          1   10.00
+colgate        3   31.50
+safeguard      2   40.00
+-----------------------
+TOTAL:            81.50
+PAY:             100.00
+CHANGE:           18.50
+Payment Type: Cash
+-----------------------
+  THANK YOU! COME AGAIN  

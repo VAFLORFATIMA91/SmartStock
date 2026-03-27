@@ -49,16 +49,12 @@ public class salesReports extends javax.swing.JFrame {
 
         loadTodaySales(); // auto load today's sales
 
-        reprint.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
-                openReceiptFolder();
-            }
-        });
+        
 
         setLocationRelativeTo(null);
     }
 
-   // =========================
+    // =========================
     // TABLE SETUP + CLICK LISTENER
     // =========================
     private void setupTable() {
@@ -116,50 +112,99 @@ public class salesReports extends javax.swing.JFrame {
     // =========================
     // SHOW SALE DETAILS
     // =========================
-    private void showSaleDetails(int salesId) {
+  private void showSaleDetails(int salesId) {
     try {
         config con = new config();
+
         ResultSet rs = con.select(
-            "SELECT items, price, quantity, subtotal, pay_amount, payment_type FROM tbl_sales WHERE s_id = " + salesId
+            "SELECT items, price, quantity, subtotal, pay_amount, payment_type, date " +
+            "FROM tbl_sales WHERE s_id = " + salesId
         );
 
-        StringBuilder details = new StringBuilder();
+        StringBuilder receipt = new StringBuilder();
+
+        receipt.append("========= MERIDA'S STORE =========\n")
+               .append("        123 Main Street\n")
+               .append("        Tel: 09123456789\n")
+               .append("----------------------------------\n")
+               .append(String.format("%-12s %3s %8s\n", "Item", "Qty", "Price"))
+               .append("----------------------------------\n");
+
+        double total = 0;
+        double pay = 0;
+        String paymentType = "";
+        String date = "";
 
         while (rs.next()) {
+            String item = rs.getString("items");
+            int qty = rs.getInt("quantity");
+            double price = rs.getDouble("price");
 
-            String paymentType = rs.getString("payment_type");
+            total += rs.getDouble("subtotal"); // ✔ sakto calculation
+            pay = rs.getDouble("pay_amount");
+            paymentType = rs.getString("payment_type");
+            date = rs.getString("date");
 
-            details.append("============================\n")
-                   .append("       ITEMS WERE SOLD      \n")
-                   .append("============================\n")
-                   .append("Item:\n")
-                   .append(rs.getString("items"))
-                   .append("----------------------------\n")
-                   .append("\nSubtotal: ").append(rs.getDouble("subtotal"));
-
-            // ✅ Only show Pay Amount if NOT Credit Card
-            if (!paymentType.equalsIgnoreCase("Credit Card")) {
-                details.append("\nPay Amount: ").append(rs.getDouble("pay_amount"));
-            }
-
-            details.append("\nPayment Type: ").append(paymentType)
-                   .append("\n--------------------------\n");
+            // ✔ PRICE only (no subtotal here)
+            receipt.append(String.format("%-12s %3d %8.2f\n", item, qty, price));
         }
 
-        JTextArea textArea = new JTextArea(details.toString());
+        double change = pay - total;
+
+        receipt.append("----------------------------------\n")
+               .append(String.format("TOTAL:     %10.2f\n", total));
+
+        // ✔ show PAY & CHANGE only if not credit card
+        if (!paymentType.equalsIgnoreCase("Credit Card")) {
+            receipt.append(String.format("PAY:       %10.2f\n", pay))
+                   .append(String.format("CHANGE:    %10.2f\n", change));
+        }
+
+        receipt.append("Payment Type: ").append(paymentType).append("\n")
+               .append("Date: ").append(date).append("\n")
+               .append("----------------------------------\n")
+               .append("      THANK YOU! COME AGAIN\n");
+
+        // TEXT AREA (Receipt View)
+        JTextArea textArea = new JTextArea(receipt.toString());
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
         textArea.setEditable(false);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
 
         JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setPreferredSize(new Dimension(400, 300));
+        scrollPane.setPreferredSize(new Dimension(350, 400));
 
-        JOptionPane.showMessageDialog(this, scrollPane,
-                "Sales Details", JOptionPane.INFORMATION_MESSAGE);
+        // CUSTOM BUTTON
+        Object[] options = {"Reprint Receipt"};
+
+        int choice = JOptionPane.showOptionDialog(
+                this,
+                scrollPane,
+                "Receipt",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        // ✅ DIRECT PRINT
+        if (choice == 0) {
+            try {
+                boolean printed = textArea.print();
+
+                if (printed) {
+                    JOptionPane.showMessageDialog(this, "Receipt printed successfully!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Printing cancelled.");
+                }
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Printing failed: " + ex.getMessage());
+            }
+        }
 
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error fetching sale details: " + e.getMessage());
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
 }
 
@@ -250,39 +295,7 @@ public class salesReports extends javax.swing.JFrame {
             "Error loading data: "+e.getMessage());
         }
     }
-
-    // =========================
-    // OPEN RECEIPT FOLDER
-    // =========================
-    public void openReceiptFolder(){
-
-        try{
-
-            File folder = new File(
-            "C:/Users/Fatima/OneDrive/Documents/NetBeansProjects/SmartStock/receipts");
-
-            if(folder.exists()){
-
-                Desktop.getDesktop().open(folder);
-
-            }else{
-
-                JOptionPane.showMessageDialog(null,"Receipt folder not found!");
-            }
-
-        }catch(Exception e){
-
-            JOptionPane.showMessageDialog(null,
-            "Error opening folder: "+e.getMessage());
-        }
-    }
-
-    
-
-
-
-
-    /**
+ /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
@@ -304,7 +317,7 @@ public class salesReports extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         totalSales = new javax.swing.JLabel();
         generateReport = new javax.swing.JButton();
-        reprint = new javax.swing.JButton();
+        printSales = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         dashboard = new javax.swing.JButton();
         manage = new javax.swing.JButton();
@@ -312,6 +325,7 @@ public class salesReports extends javax.swing.JFrame {
         sales = new javax.swing.JButton();
         settings = new javax.swing.JButton();
         logout = new javax.swing.JButton();
+        productInventory = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -378,10 +392,15 @@ public class salesReports extends javax.swing.JFrame {
             }
         });
 
-        reprint.setBackground(new java.awt.Color(51, 204, 255));
-        reprint.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        reprint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/printer.png"))); // NOI18N
-        reprint.setText("Reprint Receipt");
+        printSales.setBackground(new java.awt.Color(51, 204, 255));
+        printSales.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        printSales.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/printer.png"))); // NOI18N
+        printSales.setText("Print Sales Reports");
+        printSales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printSalesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -406,7 +425,7 @@ public class salesReports extends javax.swing.JFrame {
                                 .addComponent(generateReport, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(41, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(reprint)
+                        .addComponent(printSales)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -425,12 +444,12 @@ public class salesReports extends javax.swing.JFrame {
                     .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
                     .addComponent(generateReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(45, 45, 45)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(reprint)
+                            .addComponent(printSales)
                             .addComponent(jLabel5)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
@@ -503,6 +522,16 @@ public class salesReports extends javax.swing.JFrame {
             }
         });
 
+        productInventory.setBackground(new java.awt.Color(153, 153, 153));
+        productInventory.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        productInventory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/product-management (1).png"))); // NOI18N
+        productInventory.setText("Product Inventory");
+        productInventory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productInventoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -516,7 +545,8 @@ public class salesReports extends javax.swing.JFrame {
                     .addComponent(products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(manage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(dashboard, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                    .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(productInventory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -526,7 +556,7 @@ public class salesReports extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addComponent(jLabel3)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(dashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(manage, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -535,8 +565,10 @@ public class salesReports extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(sales, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(productInventory, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
                 .addComponent(logout, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
@@ -630,6 +662,125 @@ public class salesReports extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_generateReportActionPerformed
 
+    private void printSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printSalesActionPerformed
+     try {
+        config con = new config();
+
+        java.util.Date start = jDateChooser1.getDate();
+        java.util.Date end = jDateChooser2.getDate();
+
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+
+        String startDate = (start != null) ? sdf.format(start) : "0000-00-00";
+        String endDate = (end != null) ? sdf.format(end) : "9999-12-31";
+
+        ResultSet rs = con.select(
+            "SELECT s_id, date, SUM(subtotal) AS total_sales, payment_type, " +
+            "COALESCE(first_name,'') || ' ' || COALESCE(last_name,'') AS cashier " +
+            "FROM tbl_sales s " +
+            "LEFT JOIN tbl_users u ON id = CAST(id AS TEXT) " +
+            "WHERE DATE(date) BETWEEN '" + startDate + "' AND '" + endDate + "' " +
+            "GROUP BY s_id, id " +
+            "ORDER BY cashier, date"
+        );
+
+        StringBuilder report = new StringBuilder();
+
+        report.append("===================== MERIDA'S STORE =============================\n")
+              .append("                     123 Main Street\n")
+              .append("-----------------------------------------------------------------------\n");
+
+        String currentCashier = "";
+        double cashierSubtotal = 0;
+        double grandTotal = 0;
+
+        while (rs.next()) {
+
+            String cashier = rs.getString("cashier");
+            String date = rs.getString("date");
+            int salesId = rs.getInt("s_id");
+            double amount = rs.getDouble("total_sales");
+            String payment = rs.getString("payment_type");
+
+            // NEW CASHIER HEADER
+            if (!cashier.equals(currentCashier)) {
+
+                if (!currentCashier.equals("")) {
+                    report.append(String.format("Subtotal: %22.2f\n\n", cashierSubtotal));
+                }
+
+                currentCashier = cashier;
+                cashierSubtotal = 0;
+
+                report.append("\nCashier: ").append(currentCashier).append("\n")
+                      .append("--------------------------------------------------------------\n")
+                      .append(String.format("%-20s %-10s %12s %-12s\n",
+                              "Date", "Sales ID", "Amount", "Payment"))
+                      .append("--------------------------------------------------------------\n");
+            }
+
+            cashierSubtotal += amount;
+            grandTotal += amount;
+
+            // ✅ FIXED ALIGNMENT HERE
+            report.append(String.format("%-20s %-10d %12.2f %-12s\n",
+                    date, salesId, amount, payment));
+        }
+
+        // LAST CASHIER SUBTOTAL
+        if (!currentCashier.equals("")) {
+            report.append(String.format("Subtotal: %22.2f\n", cashierSubtotal));
+        }
+
+        report.append("\n--------------------------------------------------------------\n")
+              .append(String.format("TOTAL SALES: %20.2f\n", grandTotal))
+              .append("--------------------------------------------------------------\n")
+              .append("        THANK YOU! COME AGAIN\n");
+
+        // TEXT AREA
+        JTextArea textArea = new JTextArea(report.toString());
+        textArea.setFont(new Font("Monospaced", Font.PLAIN, 16)); // 🔥 IMPORTANT
+        textArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        scrollPane.setPreferredSize(new Dimension(600, 500));
+
+        Object[] options = {"Print Report"};
+        int choice = JOptionPane.showOptionDialog(
+                this,
+                scrollPane,
+                "Sales Report (By Cashier)",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+
+        // PRINT
+        if (choice == 0) {
+            boolean printed = textArea.print();
+
+            if (printed) {
+                JOptionPane.showMessageDialog(this, "Sales report printed successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Printing cancelled.");
+            }
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    
+ 
+}         // TODO add your handling code here:
+    }//GEN-LAST:event_printSalesActionPerformed
+
+    private void productInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productInventoryActionPerformed
+        productInventory ut = new productInventory();
+        ut.setVisible(true);
+        this.dispose();           // TODO add your handling code here:
+    }//GEN-LAST:event_productInventoryActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -681,8 +832,9 @@ public class salesReports extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton logout;
     private javax.swing.JButton manage;
+    private javax.swing.JButton printSales;
+    private javax.swing.JButton productInventory;
     private javax.swing.JButton products;
-    private javax.swing.JButton reprint;
     private javax.swing.JButton sales;
     private javax.swing.JTable salesReports;
     private javax.swing.JButton settings;

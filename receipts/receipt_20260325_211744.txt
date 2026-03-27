@@ -1,0 +1,16 @@
+   ==== MERIDA'S STORE ====   
+   123 Main Street
+   Tel: 09123456789
+-------------------------------
+Cashier: my my
+-------------------------------
+Item         Qty   Total
+-------------------------------
+colgate        2   21.00
+-------------------------------
+TOTAL:            21.00
+PAY:              21.00
+CHANGE:            0.00
+Payment Type: Cash
+-------------------------------
+  THANK YOU! COME AGAIN  

@@ -67,6 +67,8 @@ public class viewProducts extends javax.swing.JFrame {
         setupTable();
         displayData();
         
+        
+        
         setLocationRelativeTo(null);
         
     }

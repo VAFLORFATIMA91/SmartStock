@@ -238,6 +238,7 @@ public class products extends javax.swing.JFrame {
         sales = new javax.swing.JButton();
         settings = new javax.swing.JButton();
         logout = new javax.swing.JButton();
+        productInventory = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -392,6 +393,16 @@ public class products extends javax.swing.JFrame {
             }
         });
 
+        productInventory.setBackground(new java.awt.Color(153, 153, 153));
+        productInventory.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        productInventory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/product-management (1).png"))); // NOI18N
+        productInventory.setText("Product Inventory");
+        productInventory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productInventoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -405,7 +416,8 @@ public class products extends javax.swing.JFrame {
                     .addComponent(products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(manage, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
                     .addComponent(dashboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(productInventory, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -415,7 +427,7 @@ public class products extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addComponent(jLabel3)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(dashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(manage, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -424,6 +436,8 @@ public class products extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(sales, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(productInventory, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
                 .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(logout, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -545,6 +559,12 @@ public class products extends javax.swing.JFrame {
     }            // TODO add your handling code here:
     }//GEN-LAST:event_logoutActionPerformed
 
+    private void productInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productInventoryActionPerformed
+        productInventory ut = new productInventory();
+        ut.setVisible(true);
+        this.dispose();           // TODO add your handling code here:
+    }//GEN-LAST:event_productInventoryActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -593,6 +613,7 @@ public class products extends javax.swing.JFrame {
     private javax.swing.JButton logout;
     private javax.swing.JButton manage;
     private javax.swing.JTable manageProducts;
+    private javax.swing.JButton productInventory;
     private javax.swing.JButton products;
     private javax.swing.JButton sales;
     private javax.swing.JTextField search;

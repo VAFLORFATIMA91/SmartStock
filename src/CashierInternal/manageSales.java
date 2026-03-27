@@ -70,7 +70,7 @@ public class manageSales extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
 
-    // Load products from DB
+     // Load products from DB
     private void loadProducts() {
     // Create table model
     productsModel = new DefaultTableModel(new String[]{"Product", "Price", "Stock"}, 0) {
@@ -86,9 +86,12 @@ public class manageSales extends javax.swing.JFrame {
         ResultSet rs = stmt.executeQuery(sql);
 
         while (rs.next()) {
+            int stock = rs.getInt("stock");
+
+            if (stock == 0) continue; // ❌ skip rows with zero stock
+
             String name = rs.getString("name");
             double price = rs.getDouble("price");
-            int stock = rs.getInt("stock");
 
             productsModel.addRow(new Object[]{name, price, stock});
         }
@@ -108,7 +111,7 @@ public class manageSales extends javax.swing.JFrame {
     sorter = new TableRowSorter<>(productsModel);
     products1.setRowSorter(sorter);
 
-    // 👉 COLOR RENDERER (RED if stock = 0)
+    // 👉 COLOR RENDERER (OPTIONAL, stock = 0 won't exist now)
     products1.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
@@ -118,18 +121,8 @@ public class manageSales extends javax.swing.JFrame {
             Component c = super.getTableCellRendererComponent(
                     table, value, isSelected, hasFocus, row, column);
 
-            int modelRow = table.convertRowIndexToModel(row);
-
-            int stock = Integer.parseInt(
-                    productsModel.getValueAt(modelRow, 2).toString()
-            );
-
             if (!isSelected) {
-                if (stock == 0) {
-                    c.setForeground(Color.RED); // 🔴 OUT OF STOCK
-                } else {
-                    c.setForeground(Color.BLACK);
-                }
+                c.setForeground(Color.BLACK);
             } else {
                 c.setForeground(Color.WHITE); // readable when selected
             }
@@ -138,7 +131,6 @@ public class manageSales extends javax.swing.JFrame {
         }
     });
 }
-
     // Setup live search
     private void setupSearch() {
         search.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -442,6 +434,8 @@ public class manageSales extends javax.swing.JFrame {
     }
 
 
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -568,21 +562,30 @@ public class manageSales extends javax.swing.JFrame {
 
         add.setBackground(new java.awt.Color(0, 153, 51));
         add.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        add.setForeground(new java.awt.Color(255, 255, 255));
         add.setText("Add to Cart");
 
         clear.setBackground(new java.awt.Color(204, 0, 0));
         clear.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        clear.setForeground(new java.awt.Color(255, 255, 255));
         clear.setText("Clear Cart");
 
         jButton1.setBackground(new java.awt.Color(51, 204, 255));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/printer.png"))); // NOI18N
         jButton1.setText("Print Receipt");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Payment Type:");
 
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Pay Amount:");
 
         paymentType.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -596,9 +599,11 @@ public class manageSales extends javax.swing.JFrame {
         payAmount.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
 
         jLabel11.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("Total Sale:");
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
         jLabel12.setText("Change:");
 
         totalSales.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -635,7 +640,7 @@ public class manageSales extends javax.swing.JFrame {
                                 .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel9)
                             .addComponent(jLabel10))
                         .addGap(18, 18, 18)
@@ -643,11 +648,9 @@ public class manageSales extends javax.swing.JFrame {
                             .addComponent(paymentType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(payAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addGap(22, 22, 22))
-                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(totalSales, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -687,13 +690,13 @@ public class manageSales extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel4))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel4)))
+                        .addComponent(search, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 19, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -709,9 +712,9 @@ public class manageSales extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(pquant, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
                 .addGap(18, 18, 18)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -927,6 +930,10 @@ public class manageSales extends javax.swing.JFrame {
         
 
     }//GEN-LAST:event_searchActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

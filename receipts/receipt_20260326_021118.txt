@@ -1,0 +1,16 @@
+   ==== MERIDA'S STORE ====   
+   123 Main Street
+   Tel: 09123456789
+-------------------------------
+Cashier: Unknown
+-------------------------------
+Item         Qty   Total
+-------------------------------
+wings          1   10.00
+-------------------------------
+TOTAL:            10.00
+PAY:              10.00
+CHANGE:            0.00
+Payment Type: Cash
+-------------------------------
+  THANK YOU! COME AGAIN  

@@ -109,8 +109,9 @@ public class settings extends javax.swing.JFrame {
         manage = new javax.swing.JButton();
         products = new javax.swing.JButton();
         sales = new javax.swing.JButton();
-        settings = new javax.swing.JButton();
+        productInventory = new javax.swing.JButton();
         logout = new javax.swing.JButton();
+        settings1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -319,13 +320,13 @@ public class settings extends javax.swing.JFrame {
             }
         });
 
-        settings.setBackground(new java.awt.Color(153, 153, 153));
-        settings.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        settings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png"))); // NOI18N
-        settings.setText("Settings");
-        settings.addActionListener(new java.awt.event.ActionListener() {
+        productInventory.setBackground(new java.awt.Color(153, 153, 153));
+        productInventory.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        productInventory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/product-management (1).png"))); // NOI18N
+        productInventory.setText("Product Inventory");
+        productInventory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                settingsActionPerformed(evt);
+                productInventoryActionPerformed(evt);
             }
         });
 
@@ -339,6 +340,16 @@ public class settings extends javax.swing.JFrame {
             }
         });
 
+        settings1.setBackground(new java.awt.Color(153, 153, 153));
+        settings1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        settings1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png"))); // NOI18N
+        settings1.setText("Settings");
+        settings1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                settings1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -349,11 +360,12 @@ public class settings extends javax.swing.JFrame {
                     .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(settings, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(productInventory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(sales, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(products, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(manage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(dashboard, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(dashboard, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(settings1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(26, 26, 26)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -372,8 +384,10 @@ public class settings extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(sales, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+                .addComponent(productInventory, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(settings1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
                 .addComponent(logout, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24))
         );
@@ -419,11 +433,11 @@ public class settings extends javax.swing.JFrame {
         this.dispose();         // TODO add your handling code here:
     }//GEN-LAST:event_salesActionPerformed
 
-    private void settingsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settingsActionPerformed
-        settings ut = new settings();
+    private void productInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productInventoryActionPerformed
+        productInventory ut = new productInventory();
         ut.setVisible(true);
         this.dispose();         // TODO add your handling code here:
-    }//GEN-LAST:event_settingsActionPerformed
+    }//GEN-LAST:event_productInventoryActionPerformed
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
                                                  
@@ -456,6 +470,10 @@ public class settings extends javax.swing.JFrame {
         ut.setVisible(true);
         this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_EditActionPerformed
+
+    private void settings1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_settings1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_settings1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -514,8 +532,9 @@ public class settings extends javax.swing.JFrame {
     private javax.swing.JLabel lblUsername;
     private javax.swing.JButton logout;
     private javax.swing.JButton manage;
+    private javax.swing.JButton productInventory;
     private javax.swing.JButton products;
     private javax.swing.JButton sales;
-    private javax.swing.JButton settings;
+    private javax.swing.JButton settings1;
     // End of variables declaration//GEN-END:variables
 }

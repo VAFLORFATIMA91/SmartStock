@@ -135,21 +135,26 @@ class StatusRenderer extends javax.swing.table.DefaultTableCellRenderer {
     public void displayData() {
     try {
         DefaultTableModel model = (DefaultTableModel) manageUsers.getModel();
-        model.setRowCount(0); // clear table
+        model.setRowCount(0); // clear existing rows
 
         config con = new config();
         ResultSet rs = con.select("SELECT * FROM tbl_users");
 
         while (rs.next()) {
+
+            // Combine first name + last name
+            String fullName = rs.getString("first_name") + " " + rs.getString("last_name");
+
             model.addRow(new Object[]{
-                rs.getInt("id"),
-                rs.getString("first_name"),
-                rs.getString("last_name"),
-                rs.getString("email"),
-                rs.getString("role"),
-                rs.getString("status")
+                rs.getInt("id"),        // ID (hidden)
+                fullName,               // Name
+                rs.getString("email"),  // Email
+                rs.getString("role"),   // Role
+                rs.getString("status"), // Status
+                "Actions"               // IMPORTANT for buttons
             });
         }
+
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Failed to load users: " + e.getMessage());
     }
@@ -273,6 +278,7 @@ class StatusRenderer extends javax.swing.table.DefaultTableCellRenderer {
         sales = new javax.swing.JButton();
         settings = new javax.swing.JButton();
         logout = new javax.swing.JButton();
+        productInventory = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -427,20 +433,32 @@ class StatusRenderer extends javax.swing.table.DefaultTableCellRenderer {
             }
         });
 
+        productInventory.setBackground(new java.awt.Color(153, 153, 153));
+        productInventory.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        productInventory.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/product-management (1).png"))); // NOI18N
+        productInventory.setText("Product Inventory");
+        productInventory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                productInventoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(settings, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(sales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(manage, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
-                    .addComponent(dashboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(products, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(manage, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE)
+                        .addComponent(dashboard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(productInventory, javax.swing.GroupLayout.DEFAULT_SIZE, 246, Short.MAX_VALUE))
+                    .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -450,7 +468,7 @@ class StatusRenderer extends javax.swing.table.DefaultTableCellRenderer {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addComponent(jLabel3)
-                .addGap(33, 33, 33)
+                .addGap(18, 18, 18)
                 .addComponent(dashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(manage, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -458,6 +476,8 @@ class StatusRenderer extends javax.swing.table.DefaultTableCellRenderer {
                 .addComponent(products, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(sales, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(productInventory, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(settings, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -577,6 +597,12 @@ class StatusRenderer extends javax.swing.table.DefaultTableCellRenderer {
              
     }//GEN-LAST:event_searchActionPerformed
 
+    private void productInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_productInventoryActionPerformed
+        productInventory ut = new productInventory();
+        ut.setVisible(true);
+        this.dispose();           // TODO add your handling code here:
+    }//GEN-LAST:event_productInventoryActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -625,6 +651,7 @@ class StatusRenderer extends javax.swing.table.DefaultTableCellRenderer {
     private javax.swing.JButton logout;
     private javax.swing.JButton manage;
     private javax.swing.JTable manageUsers;
+    private javax.swing.JButton productInventory;
     private javax.swing.JButton products;
     private javax.swing.JButton sales;
     private javax.swing.JTextField search;
